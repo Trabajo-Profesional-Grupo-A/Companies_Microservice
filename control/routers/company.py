@@ -10,6 +10,7 @@ from fastapi import (
 from control.codes import (
     COMPANY_NOT_FOUND,
     INCORRECT_CREDENTIALS,
+    USER_NOT_FOUND,
     BAD_REQUEST,
     CONFLICT,
 )
@@ -18,6 +19,7 @@ import os
 
 from control.models.models import CompanySignUp, CompanySignIn, CompanyResponse
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
+from control.routers.aux import get_user_from_email
 
 router = APIRouter(
     tags=["companies"],
@@ -94,4 +96,18 @@ def upload_image():
         blob.upload_from_filename(image_path)
         return {"message": "Image uploaded successfully."}
     except Exception as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+
+@router.get("/prueba/conexion")    
+def api_prueba_conexion(email: str):
+    """
+    Get a user by email.
+    """
+    try:
+        user = get_user_from_email(email)
+        if not user:
+            raise HTTPException(status_code=USER_NOT_FOUND, detail="User not found.")
+        return {"message": "User found successfully.", "user": user}
+
+    except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
