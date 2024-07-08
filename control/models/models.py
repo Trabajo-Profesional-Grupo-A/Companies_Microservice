@@ -26,3 +26,11 @@ class CompanyResponse(BaseModel):
     """
     email: str
     name: str
+    description: str
+
+class CompanyUpdate(BaseModel):
+    """
+    Company update model.
+    """
+    name: str
+    description: str

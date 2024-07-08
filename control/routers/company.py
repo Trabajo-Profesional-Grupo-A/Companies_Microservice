@@ -15,7 +15,7 @@ from control.codes import (
     CONFLICT,
 )
 
-from control.models.models import CompanySignUp, CompanySignIn, CompanyResponse
+from control.models.models import CompanySignUp, CompanySignIn, CompanyResponse, CompanyUpdate
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
 
 router = APIRouter(
@@ -24,7 +24,7 @@ router = APIRouter(
 )
 origins = ["*"]
 
-from repository.company_repository import create_company, get_company
+from repository.company_repository import create_company, get_company, update_company
 
 @router.post("/sign-up")
 def sign_up(company: CompanySignUp):
@@ -56,7 +56,7 @@ def sign_in(company: CompanySignIn):
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
-@router.get("/get-company", response_model=CompanyResponse)
+@router.get("/company", response_model=CompanyResponse)
 def get_company_by_token(token: str):
     """
     Get a company by token.
@@ -66,7 +66,25 @@ def get_company_by_token(token: str):
         company = get_company(email)
         if not company:
             raise HTTPException(status_code=COMPANY_NOT_FOUND, detail="Company not found.")
-        return CompanySignUp.parse_obj(company)
+        return CompanyResponse(email=company["email"], name=company["name"], description=company["description"])
 
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+    
+@router.put("/company")
+def update_company_description(token: str, company_update: CompanyUpdate):
+    """
+    Update a company's description.
+    """
+    try:
+        email = decode_token(token)["email"]
+        company = get_company(email)
+        if not company:
+            raise HTTPException(status_code=COMPANY_NOT_FOUND, detail="Company not found.")
+        update_company(email, company_update)
+        return {"message": "Company description updated successfully."}
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+
+
+    
