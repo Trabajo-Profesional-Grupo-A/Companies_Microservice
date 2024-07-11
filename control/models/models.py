@@ -2,6 +2,7 @@
 """
 This module is dedicated for all the pydantic models the API will use.
 """
+from typing import List
 from pydantic import BaseModel
 
 
@@ -34,3 +35,12 @@ class CompanyUpdate(BaseModel):
     """
     name: str
     description: str
+
+class JobDescription(BaseModel):
+    """
+    Job description model.
+    """
+    title: str
+    description: str
+    responsabilities: List[str]
+    requirements: List[str]
