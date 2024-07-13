@@ -13,7 +13,8 @@ from repository.company_repository import (
     update_job_description,
     modify_job_description,
     get_job_description_by_id,
-    get_job_descriptions
+    get_job_descriptions,
+    delete_job_description
 )
 
 router = APIRouter(
@@ -118,5 +119,34 @@ def get_my_job_descriptions(token: str, offset: int = 0, amount: int = 10):
         
         return job_descriptions
     except Exception as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+
+
+@router.delete("/company/job_description/{job_id}")
+def delete_job_description_api(token: str, job_id: str):
+    """
+    Delete a job description by its ID.
+    """
+    try:
+        email = decode_token(token)["email"]
+        company = get_company(email)
+        if not company:
+            raise HTTPException(status_code=COMPANY_NOT_FOUND, detail="Company not found.")
+        
+        print("antes de delete_job_description")
+        delete_job_description(job_id)
+        print("despues de delete_job_description")
+
+        print("antes de requests.delete(url)")
+        # Borrar la job description del modelo
+        url = API_MATCHING_URL + f"/matching/job/{job_id}/"
+        response = requests.delete(url)
+        print("despues de requests.delete(url)")
+        
+        if response.status_code != OK:
+            raise HTTPException(status_code=BAD_REQUEST, detail="Error deleting job description from model.")
+        
+        return {"message": "Job description deleted successfully."}
+    except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
