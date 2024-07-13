@@ -36,11 +36,23 @@ class CompanyUpdate(BaseModel):
     name: str
     description: str
 
-class JobDescription(BaseModel):
+class JobDescriptionRequest(BaseModel):
     """
-    Job description model.
+    Job description request model.
     """
     title: str
     description: str
     responsabilities: List[str]
     requirements: List[str]
+
+class JobDescription(BaseModel):
+    """
+    Job description model.
+    """
+    id: str
+    title: str
+    description: str
+    responsabilities: List[str]
+    requirements: List[str]
+
+

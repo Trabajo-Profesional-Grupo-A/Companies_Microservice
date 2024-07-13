@@ -1,6 +1,7 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from control.routers import company
+from control.routers import job_description
 
 app = FastAPI(
     title="Companies API", description="This is the API for the companies service."
@@ -8,6 +9,7 @@ app = FastAPI(
 
 origins = ["*"]
 app.include_router(company.router)
+app.include_router(job_description.router)
 
 app.add_middleware(
     CORSMiddleware,
