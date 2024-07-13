@@ -82,14 +82,14 @@ def update_job_description_api(token: str, job_id: str, new_job_description: Job
         modify_job_description(job_id, new_job_description.dict())
 
         # Enviar la job description al modelo para que actualice la data
-        # url = API_MATCHING_URL + f"/matching/job/{job_id}/"
-        # response = requests.put(
-        #     url,
-        #     json=new_job_description.dict()
-        # )
+        url = API_MATCHING_URL + f"/matching/job/{job_id}/"
+        response = requests.post(
+            url,
+            json=new_job_description.dict()
+        )
         
-        # if response.status_code != OK:
-        #     raise HTTPException(status_code=BAD_REQUEST, detail="Error updating job description to model.")
+        if response.status_code != OK:
+            raise HTTPException(status_code=BAD_REQUEST, detail="Error updating job description to model.")
         
         return {"message": "Job description updated successfully."}
     except ValueError as e:
