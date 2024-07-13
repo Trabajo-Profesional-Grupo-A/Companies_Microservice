@@ -110,7 +110,7 @@ def get_my_job_descriptions(token: str, offset: int = 0, amount: int = 10):
                 id=str(jd["_id"]),
                 title=jd["title"],
                 description=jd["description"],
-                responsibilities=jd["responsabilities"],
+                responsabilities=jd["responsabilities"],
                 requirements=jd["requirements"]
             )
             for jd in job_descriptions
