@@ -105,3 +105,16 @@ def get_job_descriptions(email: str, offset: int = 0, amount: int = 10):
         return job_descriptions
     except Exception as e:
         raise ValueError(str(e))
+    
+def delete_job_description(job_id: str):
+    """
+    Delete a job description by its ID.
+    """
+    try:
+        result = collection_jd.delete_one({"_id": ObjectId(job_id)})
+        if result.deleted_count > 0:
+            return f"Job description with id {job_id} deleted successfully."
+        else:
+            return f"No job description found with id {job_id}."
+    except Exception as e:
+        raise ValueError(str(e))
