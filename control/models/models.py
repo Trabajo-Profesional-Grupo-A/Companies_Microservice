@@ -52,7 +52,7 @@ class JobDescription(BaseModel):
     id: str
     title: str
     description: str
-    responsabilities: List[str]
+    responsibilities: List[str]
     requirements: List[str]
 
 
