@@ -133,15 +133,11 @@ def delete_job_description_api(token: str, job_id: str):
         if not company:
             raise HTTPException(status_code=COMPANY_NOT_FOUND, detail="Company not found.")
         
-        print("antes de delete_job_description")
         delete_job_description(job_id)
-        print("despues de delete_job_description")
 
-        print("antes de requests.delete(url)")
         # Borrar la job description del modelo
         url = API_MATCHING_URL + f"/matching/job/{job_id}/"
         response = requests.delete(url)
-        print("despues de requests.delete(url)")
         
         if response.status_code != OK:
             raise HTTPException(status_code=BAD_REQUEST, detail="Error deleting job description from model.")
