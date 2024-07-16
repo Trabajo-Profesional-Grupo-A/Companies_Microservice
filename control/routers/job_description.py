@@ -68,7 +68,7 @@ def get_job_description(token: str, job_id: str):
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
     
-@router.get("/company/job_description/{job_id}", response_model=JobDescription)
+@router.get("/company/job_description_to_match/{job_id}", response_model=JobDescription)
 def get_job_description_to_match(job_id: str):
     """
     Get a job description by its ID.
