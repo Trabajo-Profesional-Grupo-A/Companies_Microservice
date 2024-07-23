@@ -77,36 +77,7 @@ def get_job_description_to_match(job_id: str):
         job_description["id"] = str(job_description.pop("_id"))
         return JobDescription(**job_description)
     except ValueError as e:
-        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
-    
-
-@router.put("/company/job_description/{job_id}")
-def update_job_description_api(token: str, job_id: str, new_job_description: JobDescriptionRequest):
-    """
-    Update the job description of a company.
-    """
-    try:
-        email = decode_token(token)["email"]
-        company = get_company(email)
-        if not company:
-            raise HTTPException(status_code=COMPANY_NOT_FOUND, detail="Company not found.")
-
-        modify_job_description(job_id, new_job_description.dict())
-
-        # Enviar la job description al modelo para que actualice la data
-        url = API_MATCHING_URL + f"/matching/job/{job_id}/"
-        response = requests.post(
-            url,
-            json=new_job_description.dict()
-        )
-        
-        if response.status_code != OK:
-            raise HTTPException(status_code=BAD_REQUEST, detail="Error updating job description to model.")
-        
-        return {"message": "Job description updated successfully."}
-    except ValueError as e:
-        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
-    
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))    
 
 @router.get("/company/job_descriptions", response_model=List[JobDescription])
 def get_my_job_descriptions(token: str, offset: int = 0, amount: int = 10):
