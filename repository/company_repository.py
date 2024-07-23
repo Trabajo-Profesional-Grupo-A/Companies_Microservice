@@ -26,6 +26,7 @@ def create_company(company: CompanySignUp):
     try:
         company_dict = dict(company)
         company_dict["description"] = ""
+        company_dict["address"] = ""
         collection.insert_one(company_dict)
     except errors.DuplicateKeyError as e:
         raise ValueError("Company with this email already exists.")
@@ -45,7 +46,7 @@ def update_company(email:str, company_update: CompanyUpdate):
     Update a company's description.
     """
     try:
-        collection.update_one({"email": email}, {"$set": {"description": company_update.description, "name": company_update.name}})
+        collection.update_one({"email": email}, {"$set": {"description": company_update.description, "name": company_update.name, "address": company_update.address}})
     except Exception as e:
         raise ValueError(str(e))
     
@@ -61,24 +62,6 @@ def update_job_description(email:str, job_description: JobDescription):
     except Exception as e:
         print("falla el insert one")
         raise ValueError(str(e))
-    
-def modify_job_description(job_id: str, new_data: dict):
-    """
-    Modify an existing job description.
-    """
-    try:
-        result = collection_jd.update_one(
-            {"_id": ObjectId(job_id)},
-            {"$set": new_data}
-        )
-        if result.modified_count > 0:
-            return f"Job description with id {job_id} updated successfully."
-        else:
-            return f"No job description found with id {job_id} or no changes made."
-    except Exception as e:
-        print("falla el update one")
-        raise ValueError(str(e))
-
 
 def get_job_description_by_id(job_id: str):
     """

@@ -35,6 +35,7 @@ class CompanyUpdate(BaseModel):
     """
     name: str
     description: str
+    address: str
 
 class JobDescriptionRequest(BaseModel):
     """
@@ -44,6 +45,7 @@ class JobDescriptionRequest(BaseModel):
     description: str
     responsabilities: List[str]
     requirements: List[str]
+    work_model: str
 
 class JobDescription(BaseModel):
     """
@@ -54,5 +56,6 @@ class JobDescription(BaseModel):
     description: str
     responsabilities: List[str]
     requirements: List[str]
+    work_model: str
 
 
