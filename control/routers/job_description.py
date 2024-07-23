@@ -11,7 +11,6 @@ from control.routers.aux import API_MATCHING_URL
 from repository.company_repository import (
     get_company,
     update_job_description,
-    modify_job_description,
     get_job_description_by_id,
     get_job_descriptions,
     delete_job_description

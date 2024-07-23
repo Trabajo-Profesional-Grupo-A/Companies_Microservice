@@ -16,7 +16,7 @@ from control.codes import (
     CONFLICT,
 )
 
-from control.models.models import CompanySignUp, CompanySignIn, CompanyResponse, CompanyUpdate, JobDescription
+from control.models.models import CompanySignUp, CompanySignIn, CompanyResponse, CompanyUpdate
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
 
 router = APIRouter(
@@ -25,7 +25,7 @@ router = APIRouter(
 )
 origins = ["*"]
 
-from repository.company_repository import create_company, get_company, update_company, update_job_description
+from repository.company_repository import create_company, get_company, update_company
 
 @router.post("/sign-up")
 def sign_up(company: CompanySignUp):
