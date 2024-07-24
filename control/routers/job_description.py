@@ -5,11 +5,12 @@ from typing import List
 import requests
 from fastapi import APIRouter, HTTPException
 from control.codes import OK, COMPANY_NOT_FOUND, BAD_REQUEST
-from control.models.models import JobDescription, JobDescriptionRequest
+from control.models.models import JobDescription, JobDescriptionMatch, JobDescriptionRequest
 from auth.auth_handler import decode_token
 from control.routers.aux import API_MATCHING_URL
 from repository.company_repository import (
     get_company,
+    get_job_description_to_match_by_id,
     update_job_description,
     get_job_description_by_id,
     get_job_descriptions,
@@ -67,15 +68,15 @@ def get_job_description(token: str, job_id: str):
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
     
-@router.get("/company/job_description_to_match/{job_id}", response_model=JobDescription)
+@router.get("/company/job_description_to_match/{job_id}", response_model=JobDescriptionMatch)
 def get_job_description_to_match(job_id: str):
     """
     Get a job description by its ID.
     """
     try:
-        job_description = get_job_description_by_id(job_id)
+        job_description = get_job_description_to_match_by_id(job_id)
         job_description["id"] = str(job_description.pop("_id"))
-        return JobDescription(**job_description)
+        return JobDescriptionMatch(**job_description)
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))    
 

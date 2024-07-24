@@ -58,4 +58,16 @@ class JobDescription(BaseModel):
     requirements: List[str]
     work_model: str
 
+class JobDescriptionMatch(BaseModel):
+    """
+    Job description match model.
+    """
+    id: str
+    title: str
+    description: str
+    responsabilities: List[str]
+    requirements: List[str]
+    work_model: str
+    address: str
+
 

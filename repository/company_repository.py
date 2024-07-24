@@ -74,6 +74,22 @@ def get_job_description_by_id(job_id: str):
         return job_description
     except Exception as e:
         raise ValueError(str(e))
+    
+def get_job_description_to_match_by_id(job_id: str):
+    """
+    Retrieve a job description by its ID.
+    """
+    try:
+        job_description = collection_jd.find_one({"_id": ObjectId(job_id)})
+        company_info = collection.find_one({"email": job_description["email"]})
+
+        if not job_description:
+            raise ValueError("Job description not found.")
+        
+        job_description["address"] = company_info["address"]
+        return job_description
+    except Exception as e:
+        raise ValueError(str(e))
 
 
 def get_job_descriptions(email: str, offset: int = 0, amount: int = 10):
