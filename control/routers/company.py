@@ -67,7 +67,7 @@ def get_company_by_token(token: str):
         company = get_company(email)
         if not company:
             raise HTTPException(status_code=COMPANY_NOT_FOUND, detail="Company not found.")
-        return CompanyResponse(email=company["email"], name=company["name"], description=company["description"])
+        return CompanyResponse(email=company["email"], name=company["name"], description=company["description"], phone=company["phone"], address=company["address"])
 
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
