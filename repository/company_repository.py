@@ -25,8 +25,6 @@ def create_company(company: CompanySignUp):
     """
     try:
         company_dict = dict(company)
-        company_dict["description"] = ""
-        company_dict["address"] = ""
         collection.insert_one(company_dict)
     except errors.DuplicateKeyError as e:
         raise ValueError("Company with this email already exists.")

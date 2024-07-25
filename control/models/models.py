@@ -13,6 +13,9 @@ class CompanySignUp(BaseModel):
     email: str
     password: str
     name: str
+    phone: str
+    description: str
+    address: str
 
 class CompanySignIn(BaseModel):
     """
@@ -22,12 +25,11 @@ class CompanySignIn(BaseModel):
     password: str
 
 class CompanyResponse(BaseModel):
-    """
-    Company response model.
-    """
     email: str
     name: str
     description: str
+    phone: str
+    address: str
 
 class CompanyUpdate(BaseModel):
     """
