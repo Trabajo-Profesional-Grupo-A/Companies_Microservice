@@ -115,3 +115,30 @@ def delete_job_description(job_id: str):
             return f"No job description found with id {job_id}."
     except Exception as e:
         raise ValueError(str(e))
+    
+
+def search_companies_by_name(name: str, offset: int = 0, amount: int = 5):
+    """
+    Search for companies by their name.
+    """
+    try:
+        companies_starting_with = list(
+            collection.find({"name": {"$regex": f"^{name}", "$options": "i"}})
+                      .skip(offset)
+                      .limit(amount)
+        )
+        additional_amount = amount - len(companies_starting_with)
+
+        if additional_amount > 0:
+            additional_companies = list(
+                collection.find({"name": {"$regex": f".*{name}.*", "$options": "i"}})
+                          .skip(offset)
+                          .limit(additional_amount)
+            )
+            
+            additional_companies = [company for company in additional_companies if company not in companies_starting_with]
+            
+            companies_starting_with.extend(additional_companies)
+        return companies_starting_with
+    except Exception as e:
+        raise ValueError(f"An error occurred: {e}")

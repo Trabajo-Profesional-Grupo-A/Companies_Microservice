@@ -2,6 +2,7 @@
 This module contains the API endpoints for the companies service.
 """
 import requests
+from typing import List
 
 from fastapi import (
     APIRouter,
@@ -25,7 +26,7 @@ router = APIRouter(
 )
 origins = ["*"]
 
-from repository.company_repository import create_company, get_company, update_company
+from repository.company_repository import create_company, get_company, update_company, search_companies_by_name
 
 @router.post("/sign-up")
 def sign_up(company: CompanySignUp):
@@ -88,7 +89,18 @@ def update_company_description(token: str, company_update: CompanyUpdate):
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
 
-
+@router.get("/search", response_model=List[CompanyResponse])
+def search_company(name: str, offset: int = 0, amount: int = 5):
+    """
+    Search for companies by name.
+    """
+    try:
+        companies = search_companies_by_name(name, offset, amount)
+        if not companies:
+            raise HTTPException(status_code=USER_NOT_FOUND, detail="No companies found.")
+        return [CompanyResponse.parse_obj(user) for user in companies]
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
 
     
