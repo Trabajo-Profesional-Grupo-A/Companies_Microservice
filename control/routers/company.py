@@ -2,6 +2,14 @@
 This module contains the API endpoints for the companies service.
 """
 import requests
+import base64
+import firebase_admin
+from firebase_admin import credentials
+import os
+import json
+from firebase_admin import credentials, auth
+from firebase_admin.auth import InvalidIdTokenError
+
 from typing import List
 
 from fastapi import (
@@ -19,6 +27,14 @@ from control.codes import (
 
 from control.models.models import CompanySignUp, CompanySignIn, CompanyResponse, CompanyUpdate
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
+
+def initialize_firebase():
+    if not firebase_admin._apps:
+        service_account_info = json.loads(base64.b64decode(os.environ.get('FIREBASE_SERVICE_ACCOUNT_KEY')).decode('utf-8'))
+        cred = credentials.Certificate(service_account_info)
+        firebase_admin.initialize_app(cred)
+
+initialize_firebase()
 
 router = APIRouter(
     tags=["Companies"],
@@ -102,5 +118,20 @@ def search_company(name: str, offset: int = 0, amount: int = 5):
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
-
-    
+@router.post("/sign-in-google")
+def sign_in_google(token: str):
+    """
+    Sign in a user with Google.
+    """
+    try:
+        decoded_token = auth.verify_id_token(token)
+        email = decoded_token["email"]
+        user = get_company(email)
+        if not user:
+            raise HTTPException(status_code=USER_NOT_FOUND, detail="User not found.")
+        token = generate_token(email)
+        return {"message": "User signed in successfully.", "token": token}
+    except InvalidIdTokenError:
+        raise HTTPException(status_code=INCORRECT_CREDENTIALS, detail="Invalid token.")
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
