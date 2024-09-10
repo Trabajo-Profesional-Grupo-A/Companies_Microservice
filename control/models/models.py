@@ -39,6 +39,24 @@ class CompanyUpdate(BaseModel):
     description: str
     address: str
 
+class CompanyUpdateDescription(BaseModel):
+    """
+    Company update description model.
+    """
+    description: str
+
+class CompanyUpdateAddress(BaseModel):
+    """
+    Company update address model.
+    """
+    address: str
+
+class CompanyUpdatePhone(BaseModel):
+    """
+    Company update phone model.
+    """
+    phone: str
+
 class JobDescriptionRequest(BaseModel):
     """
     Job description request model.

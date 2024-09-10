@@ -16,8 +16,8 @@ from control.codes import (
     BAD_REQUEST,
     CONFLICT,
 )
-
-from control.models.models import CompanySignUp, CompanySignIn, CompanyResponse, CompanyUpdate
+from auth.auth_handler import decode_token
+from control.models.models import CompanySignUp, CompanySignIn, CompanyResponse, CompanyUpdate, CompanyUpdateDescription, CompanyUpdatePhone, CompanyUpdateAddress
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
 
 router = APIRouter(
@@ -26,7 +26,7 @@ router = APIRouter(
 )
 origins = ["*"]
 
-from repository.company_repository import create_company, get_company, update_company, search_companies_by_name
+from repository.company_repository import create_company, get_company, update_company, search_companies_by_name, update_company_description, update_company_phone, update_company_address
 
 @router.post("/sign-up")
 def sign_up(company: CompanySignUp):
@@ -74,7 +74,7 @@ def get_company_by_token(token: str):
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
     
 @router.put("/company")
-def update_company_description(token: str, company_update: CompanyUpdate):
+def api_update_company_description(token: str, company_update: CompanyUpdate):
     """
     Update a company's description.
     """
@@ -103,4 +103,40 @@ def search_company(name: str, offset: int = 0, amount: int = 5):
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
 
-    
+@router.patch("/company/description")
+def update_description(token: str, company_update: CompanyUpdateDescription):
+    """
+    Update a company's description.
+    """
+    try:
+        email = decode_token(token)["email"]
+        update_company_description(email, company_update.description)
+        return {"message": "Company description updated successfully."}
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+
+
+@router.patch("/company/phone")
+def update_phone(token: str, company_update: CompanyUpdatePhone):
+    """
+    Update a company's phone number.
+    """
+    try:
+        email = decode_token(token)["email"]
+        update_company_phone(email, company_update.phone)
+        return {"message": "Company phone updated successfully."}
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+
+
+@router.patch("/company/address")
+def update_address(token: str, company_update: CompanyUpdateAddress):
+    """
+    Update a company's address.
+    """
+    try:
+        email = decode_token(token)["email"]
+        update_company_address(email, company_update.address)
+        return {"message": "Company address updated successfully."}
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
