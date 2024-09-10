@@ -97,7 +97,8 @@ def get_my_job_descriptions(token: str, offset: int = 0, amount: int = 10):
                 responsabilities=jd["responsabilities"],
                 requirements=jd["requirements"],
                 work_model=jd["work_model"],
-                age_range=jd["age_range"]
+                age_range=jd["age_range"],
+                years_of_experience=jd["years_of_experience"]
             )
             for jd in job_descriptions
         ]

@@ -49,6 +49,7 @@ class JobDescriptionRequest(BaseModel):
     requirements: List[str]
     work_model: str
     age_range: Tuple[int, int]
+    years_of_experience: int
 
 class JobDescription(BaseModel):
     """
@@ -61,6 +62,7 @@ class JobDescription(BaseModel):
     requirements: List[str]
     work_model: str
     age_range: Tuple[int, int]
+    years_of_experience: int
 
 class JobDescriptionMatch(BaseModel):
     """
@@ -74,5 +76,6 @@ class JobDescriptionMatch(BaseModel):
     work_model: str
     address: str
     age_range: Tuple[int, int]
+    years_of_experience: int
 
 
