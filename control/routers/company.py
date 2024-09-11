@@ -25,7 +25,7 @@ from control.codes import (
     CONFLICT,
 )
 from auth.auth_handler import decode_token
-from control.models.models import CompanySignUp, CompanySignIn, CompanyResponse, CompanyUpdate, CompanyUpdateDescription, CompanyUpdatePhone, CompanyUpdateAddress
+from control.models.models import CompanySignUp, CompanySignIn, CompanyResponse, CompanyUpdate
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
 
 def initialize_firebase():
@@ -42,7 +42,7 @@ router = APIRouter(
 )
 origins = ["*"]
 
-from repository.company_repository import create_company, get_company, update_company, search_companies_by_name, update_company_description, update_company_phone, update_company_address
+from repository.company_repository import create_company, get_company, update_company, search_companies_by_name
 
 @router.post("/sign-up")
 def sign_up(company: CompanySignUp):
@@ -88,21 +88,6 @@ def get_company_by_token(token: str):
 
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
-    
-@router.put("/company")
-def api_update_company_description(token: str, company_update: CompanyUpdate):
-    """
-    Update a company's description.
-    """
-    try:
-        email = decode_token(token)["email"]
-        company = get_company(email)
-        if not company:
-            raise HTTPException(status_code=COMPANY_NOT_FOUND, detail="Company not found.")
-        update_company(email, company_update)
-        return {"message": "Company description updated successfully."}
-    except ValueError as e:
-        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
 
 @router.get("/search", response_model=List[CompanyResponse])
@@ -119,41 +104,18 @@ def search_company(name: str, offset: int = 0, amount: int = 5):
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
 
-@router.patch("/company/description")
-def update_description(token: str, company_update: CompanyUpdateDescription):
+@router.patch("/company")
+def api_update_company(token: str, company_update: CompanyUpdate):
     """
-    Update a company's description.
-    """
-    try:
-        email = decode_token(token)["email"]
-        update_company_description(email, company_update.description)
-        return {"message": "Company description updated successfully."}
-    except ValueError as e:
-        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
-
-
-@router.patch("/company/phone")
-def update_phone(token: str, company_update: CompanyUpdatePhone):
-    """
-    Update a company's phone number.
+    Update a company.
     """
     try:
         email = decode_token(token)["email"]
-        update_company_phone(email, company_update.phone)
-        return {"message": "Company phone updated successfully."}
-    except ValueError as e:
-        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
-
-
-@router.patch("/company/address")
-def update_address(token: str, company_update: CompanyUpdateAddress):
-    """
-    Update a company's address.
-    """
-    try:
-        email = decode_token(token)["email"]
-        update_company_address(email, company_update.address)
-        return {"message": "Company address updated successfully."}
+        company = get_company(email)
+        if not company:
+            raise HTTPException(status_code=COMPANY_NOT_FOUND, detail="Company not found.")
+        update_company(email, company_update)
+        return {"message": "Company updated successfully."}
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 

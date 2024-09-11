@@ -38,15 +38,6 @@ def get_company(email: str):
         return collection.find_one({"email": email})
     except Exception as e:
         raise ValueError(str(e))
-
-def update_company(email:str, company_update: CompanyUpdate):
-    """
-    Update a company's description.
-    """
-    try:
-        collection.update_one({"email": email}, {"$set": {"description": company_update.description, "name": company_update.name, "address": company_update.address}})
-    except Exception as e:
-        raise ValueError(str(e))
     
 def update_job_description(email:str, job_description: JobDescription):
     """
@@ -143,45 +134,16 @@ def search_companies_by_name(name: str, offset: int = 0, amount: int = 5):
     except Exception as e:
         raise ValueError(f"An error occurred: {e}")
     
-
-def update_company_description(email:str, description: str):
-    """
-    Update a company's description.
-    """
-    try:
-        if not description:
-            raise ValueError("Description is required and cannot be empty.")
-        
-        collection.update_one({"email": email}, {"$set": {
-            "description": description, 
-        }})
-    except Exception as e:
-        raise ValueError(str(e))
-    
-def update_company_phone(email:str, phone: str):
-    """
-    Update a company's phone.
-    """
-    try:
-        if not phone:
-            raise ValueError("Phone is required and cannot be empty.")
-        
-        collection.update_one({"email": email}, {"$set": {
-            "phone": phone, 
-        }})
-    except Exception as e:
-        raise ValueError(str(e))
-    
-def update_company_address(email:str, address: str):
+def update_company(email:str, company_update: CompanyUpdate):
     """
     Update a company's address.
     """
     try:
-        if not address:
-            raise ValueError("Address is required and cannot be empty.")
-        
         collection.update_one({"email": email}, {"$set": {
-            "address": address, 
+            "address": company_update.address,
+            "phone": company_update.phone,
+            "description": company_update.description, 
+            "name": company_update.name, 
         }})
     except Exception as e:
         raise ValueError(str(e))
