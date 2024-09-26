@@ -142,7 +142,7 @@ def get_job_description_to_notify(job_id: str):
 
         jd_dict = {"title": job_description["title"], "email": job_description["email"]}
 
-        return JobDescriptionNotify(**jd_dict)
+        return JobDescriptionNotify(jd_dict)
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))    
 
