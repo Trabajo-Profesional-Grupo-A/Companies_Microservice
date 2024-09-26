@@ -132,7 +132,7 @@ def delete_job_description_api(token: str, job_id: str):
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
-@router.get("/company/job_description_to_notify/{job_id}", response_model=JobDescriptionMatch)
+@router.get("/company/job_description_to_notify/{job_id}", response_model=JobDescriptionNotify)
 def get_job_description_to_notify(job_id: str):
     """
     Get a job description by its ID.
