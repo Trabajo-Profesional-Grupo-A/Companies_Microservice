@@ -79,4 +79,11 @@ class JobDescriptionMatch(BaseModel):
     age_range: Tuple[int, int]
     years_of_experience: int
 
+class JobDescriptionNotify(BaseModel):
+    """
+    Job description match model.
+    """
+    title: str
+    email: str
+
 
