@@ -5,7 +5,7 @@ from typing import List
 import requests
 from fastapi import APIRouter, HTTPException
 from control.codes import OK, COMPANY_NOT_FOUND, BAD_REQUEST
-from control.models.models import JobDescription, JobDescriptionMatch, JobDescriptionRequest
+from control.models.models import JobDescription, JobDescriptionMatch, JobDescriptionNotify, JobDescriptionRequest
 from auth.auth_handler import decode_token
 from control.routers.aux import API_MATCHING_URL
 from repository.company_repository import (
@@ -131,4 +131,17 @@ def delete_job_description_api(token: str, job_id: str):
         return {"message": "Job description deleted successfully."}
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+
+@router.get("/company/job_description_to_notify/{job_id}", response_model=JobDescriptionNotify)
+def get_job_description_to_notify(job_id: str):
+    """
+    Get a job description by its ID.
+    """
+    try:
+        job_description = get_job_description_to_match_by_id(job_id)
+
+
+        return JobDescriptionNotify(title=job_description["title"], email=job_description["email"])
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))    
 
