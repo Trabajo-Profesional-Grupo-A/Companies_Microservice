@@ -5,7 +5,7 @@ import requests
 TIMEOUT = 10
 API_USERS_URL = "https://users-microservice-mmuh.onrender.com"
 API_COMPANY_URL = "https://companies-microservice.onrender.com"
-API_MATCHING_URL = "http://34.42.161.58:8000"
+API_MATCHING_URL = "http://34.42.161.53:8000"
 
 def get_user_from_email(user_email: str):
     """
